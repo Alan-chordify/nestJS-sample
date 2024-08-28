@@ -1,7 +1,7 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { CreateCatDto } from './dto/create-cat.dto';
 import { UpdateCatDto } from './dto/update-cat.dto';
-import { Prisma, PrismaClient } from '@prisma/client';
+import { PrismaClient } from '@prisma/client';
 export interface Cat {
   id: number;
   name: string;
@@ -45,22 +45,38 @@ export class CatsService {
     return {"data": cat, message: "cats fetched successfully", statusCode: 200, status: "success"};;
   }
 
-  // update(id: number, updateCatDto: UpdateCatDto): Cat {
-  //   const catIndex = this.cats.findIndex(cat => cat.id === id);
-  //   if (catIndex === -1) {
-  //     throw new NotFoundException(`Cat with ID ${id} not found`);
-  //   }
+  async update(id: number, updateCatDto: UpdateCatDto): Promise<response> {
+    try {
+      const cat = await prisma.cat.findUnique({where: {id: id}});
+    if (!cat) {
+      throw new NotFoundException(`Cat with ID ${id} not found`);
+    }
 
-  //   const updatedCat = { ...this.cats[catIndex], ...updateCatDto };
-  //   this.cats[catIndex] = updatedCat;
-  //   return updatedCat;
-  // }
+    const updatedCat = await prisma.cat.update({
+      where: {
+        id: id,
+      },
+      data: {
+        name: updateCatDto.name,
+        breed: updateCatDto.breed
+      },
+    })
 
-  // remove(id: number): void {
-  //   const catIndex = this.cats.findIndex(cat => cat.id === id);
-  //   if (catIndex === -1) {
-  //     throw new NotFoundException(`Cat with ID ${id} not found`);
-  //   }
-  //   this.cats.splice(catIndex, 1);
-  // }
+    return {"data": updatedCat, message: "Cat updated successfully", statusCode: 500, status: "failure"}; 
+    } catch (e){ 
+      return {"data": null, message: e.message, statusCode: 500, status: "failure"}; 
+
+    }
+    
+  }
+
+  async remove(id: number): Promise<response> {
+    try{
+      const deletedCat =  await prisma.cat.delete({where: {id: id}});
+      return  {"data": null, message: "cat deleted successfully", statusCode: 200, status: "success"};   
+    } catch (e){
+      return {"data": null, message: e.message, statusCode: 500, status: "failure"}; 
+
+    }
+  }
 }
