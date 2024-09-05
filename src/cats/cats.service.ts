@@ -9,7 +9,7 @@ export interface Cat {
 }
 
 export interface response {
-    data: any, 
+  data: any, 
   message: string,
   statusCode: number
   status: string
