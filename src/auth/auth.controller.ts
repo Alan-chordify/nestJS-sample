@@ -19,7 +19,7 @@ class RegisterDto {
   @ApiProperty({ description: 'password' })
   password: string;
 
-	@ApiProperty({ description: 'Fisrt Name' })
+	@ApiProperty({ description: 'First Name' })
 	firstName: string;
 
 	@ApiProperty({ description: 'Last Name' })

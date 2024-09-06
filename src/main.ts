@@ -1,6 +1,8 @@
 import { NestFactory } from '@nestjs/core';
 import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
 import { AppModule } from './app.module';
+import { Logger } from '@nestjs/common';
+import { LoggerMiddleware } from './logger.middleware';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
@@ -11,14 +13,18 @@ async function bootstrap() {
     .setVersion('1.0')
     .addTag('cats')
     .addBearerAuth(
-      {
+      { 
+        description: `[just text field] Please enter token in following format: Bearer <JWT>`,
+        name: 'Authorization',
+        bearerFormat: 'Bearer',
+        scheme: 'Bearer',
         type: 'http',
-        scheme: 'bearer',
-        bearerFormat: 'JWT',
+        in: 'Header'
       },
       'access-token',
     )
     .build();
+  
   const document = SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('api', app, document);
 
