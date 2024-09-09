@@ -5,14 +5,15 @@ import { AuthService } from './auth.service';
 import { AuthController } from './auth.controller';
 import { JwtStrategy } from './jwt.strategy';
 import { PrismaService } from '../prisma.service';
+import * as fs from 'fs';
 
 @Module({
   imports: [
     PassportModule,
     JwtModule.register({
-      secret: process.env.JWT_SECRET || 'secretKey',
-      signOptions: { expiresIn: '24h' },
-
+      privateKey: fs.readFileSync('./private_key.pem'),
+      publicKey: fs.readFileSync('./public_key.pem'),
+      signOptions: { expiresIn: '24h', algorithm: 'RS256' },
     }),
   ],
   providers: [AuthService, JwtStrategy, PrismaService],

@@ -12,9 +12,9 @@ import { LoggerMiddleware } from './logger.middleware';
   providers: [AppService],
 })
 export class AppModule {
-  configure(consumer: MiddlewareConsumer) {
-    consumer
-      .apply(LoggerMiddleware)  // NestJS automatically instantiates the class
-      .forRoutes({ path: '*', method: RequestMethod.ALL });  // Apply to all routes
-  }
+  // configure(consumer: MiddlewareConsumer) {
+  //   consumer
+  //     .apply(LoggerMiddleware)  // NestJS automatically instantiates the class
+  //     .forRoutes({ path: '*', method: RequestMethod.ALL });  // Apply to all routes
+  // }
 }
